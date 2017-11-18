@@ -7,11 +7,15 @@ const {Todo} = require('./../models/todo');
 
 const todos = [{
     _id: new ObjectID(),
-    text: "First test todo"
+    text: "First test todo",
+    completed: true,
+    completedAt: 2345
 },
 {
     _id: new ObjectID(),
-    text: "Second test todo"
+    text: "Second test todo",
+    completed: false,
+    completedAt: 333
 }]
 
 // testing lifecycle method
@@ -134,3 +138,43 @@ describe('DELETE /todos/:id', () => {
     })
 
 })
+
+describe('PATCH /todos/:id', () => {
+
+    it('Should update the todo', done => {
+        let id = todos[1]._id.toHexString();
+        let text = 'Updated request text';
+
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({
+                completed: true,
+                text: text,
+                completedAt: 876
+            })
+            .expect(200)
+            .expect(res => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(true);
+                expect(res.body.todo.completedAt).toBeA('number');
+            })
+            .end(done);
+    })
+
+    it('Should clear completedAt when todo is not completed', done => {
+        let id = todos[0]._id.toHexString(); 
+               
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({
+                completed: false
+            })
+            .expect(200)
+            .expect(res => {
+                expect(res.body.todo.completed).toBe(false);
+                expect(res.body.todo.completedAt).toBe(null);
+            })
+            .end(done);
+    });
+
+});
