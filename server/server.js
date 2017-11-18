@@ -81,6 +81,17 @@ app.patch('/todos/:id', (req, res) => {
     }).catch(err => res.status(400).send(err));
 });
 
+app.post('/users', (req, res) => {
+    let body = _.pick(req.body, ['email', 'password']);
+    let user = new User(body);
+    user.save().then(doc => {
+        return user.generateAuthToken();
+        // res.send(doc);
+    }).then(token => {
+        res.header('x-auth', token).send(user);
+    }).catch(err => res.status(400).send(err));
+});
+
 module.exports = {app};
 
 app.listen(port, () => {
