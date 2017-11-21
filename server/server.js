@@ -93,7 +93,14 @@ app.post('/users', (req, res) => {
 });
 
 app.get('/users/me', authenticate, (req, res) => {
-    res.send(req.user);
+    let token = req.header('x-auth');
+    
+    User.findByToken(token).then(user => {
+        if(!user)
+            return Promise.reject();
+
+        res.send(user);
+    }).catch(err => res.status(401).send());
 });
 
 module.exports = {app};
