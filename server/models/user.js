@@ -80,6 +80,8 @@ UserSchema.statics.findByCredentials = function(email, password) {
             bcrypt.compare(password, matchingUser.password, (err, res) => {
                 if(res)
                     resolve(matchingUser);
+                else
+                    reject();
             });
         });
     })
