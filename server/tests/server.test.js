@@ -17,6 +17,7 @@ describe('POST /todos', () => {
 
         request(app)
             .post('/todos')
+            .set('x-auth', users[0].tokens[0].token)
             .send({text})
             .expect(200)
             .expect(res => {
@@ -39,6 +40,7 @@ describe('POST /todos', () => {
 
         request(app)
             .post('/todos')
+            .set('x-auth', users[0].tokens[0].token)            
             .send({text})
             .expect(400)
             .end((err, res) => {
@@ -58,9 +60,10 @@ describe('GET /todos', () => {
     it('Should get all todos', done => {
         request(app)
             .get('/todos')
+            .set('x-auth', users[0].tokens[0].token)            
             .expect(200)
             .expect(res => {
-                expect(res.body.todos.length).toBe(2);
+                expect(res.body.todos.length).toBe(1);
             })
             .end(done);
     });
