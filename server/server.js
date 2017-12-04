@@ -70,7 +70,7 @@ app.delete('/todos/:id', authenticate, (req, res) => {
     }).catch(err => res.status(400).send(err));
 });
 
-app.patch('/todos/:id', (req, res) => {
+app.patch('/todos/:id', authenticate, (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['text', 'completed']);
     if(!ObjectID.isValid(id)){
